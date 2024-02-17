@@ -39,7 +39,7 @@ const UserList: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user: User) => (
+          {users.slice().sort((a:User, b:User) => b.following?.length - a.following?.length).map((user: User) => (
             <tr key={user.id} className="text-center">
               <td>{user.id}</td>
               <td>{user.name}</td>
