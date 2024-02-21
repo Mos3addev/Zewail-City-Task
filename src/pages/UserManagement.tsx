@@ -4,7 +4,7 @@ import UserList from '../components/UserList'
 const UserManagement: React.FC = () => {
     return (
       <div>
-        <h1>User Management</h1>
+        <h2 className='p-2'>User Management</h2>
         <UserList />
       </div>
   )

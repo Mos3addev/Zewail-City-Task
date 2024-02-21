@@ -5,20 +5,20 @@ import DeleteIcon from './Icons/DeleteIcon'
 type FollowProps = {
     users: User[];
     followerId:number,
-    handleRemoveFollower: (userId: number, followerId: number) => void;
+    handleRemoveFollow: (userId: number, followerId: number) => void;
     userId: number;
 }
 
 const Follow: React.FC<FollowProps> = ({
 users,
 followerId,
-handleRemoveFollower,
+handleRemoveFollow,
 userId
 }) => {
     return (
     <div className="item" key={followerId}>
     {users.find((f: User) => f.id === followerId)?.name}
-    <span onClick={() => handleRemoveFollower(userId, followerId)}>
+    <span onClick={() => handleRemoveFollow(userId, followerId)}>
       <DeleteIcon />
     </span>
   </div>

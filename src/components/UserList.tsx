@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteUser, removeFollower, removeInterest } from "../Redux/Slice/userSlice";
+import { deleteUser, removeFollowing,removeFollower, removeInterest } from "../Redux/Slice/userSlice";
 import { User } from "../Interfaces/Interfaces";
 import { Table } from "react-bootstrap";
 import ViewIcon from "./Icons/ViewIcon";
@@ -14,6 +14,7 @@ const UserList: React.FC = () => {
   const dispatch = useDispatch();
   const handleDeleteUser = (id: number) => dispatch(deleteUser(id));
   const handleRemoveInterest = (userId: number, interest: number) => dispatch(removeInterest({ userId, interest }));
+  const handleRemoveFollowing = (userId: number, followerId: number) => dispatch(removeFollowing({ userId, followerId }));
   const handleRemoveFollower = (userId: number, followerId: number) => dispatch(removeFollower({ userId, followerId }));
 
   const openPopup = (userId: number, tab: string) => {
@@ -34,20 +35,31 @@ const UserList: React.FC = () => {
             <th>ID</th>
             <th>Name</th>
             <th>Followers</th>
+            <th>Following</th>
             <th>Interests</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {users.slice().sort((a:User, b:User) => b.following?.length - a.following?.length).map((user: User) => (
+          {users.slice().sort((a:User, b:User) => (b.follower?.length||0) - (a.follower?.length||0)).map((user: User) => (
             <tr key={user.id} className="text-center">
               <td>{user.id}</td>
               <td>{user.name}</td>
               <td>
+                {user.follower?.length !== undefined && user.follower?.length !== 0 && (
+                  <React.Fragment>
+                    {user.follower?.length}{" "}
+                    <span onClick={() => openPopup(user.id, "Followers")}>
+                      <ViewIcon />
+                    </span>
+                  </React.Fragment>
+                )}
+              </td>
+              <td>
                 {user.following?.length !== undefined && user.following?.length !== 0 && (
                   <React.Fragment>
                     {user.following?.length}{" "}
-                    <span onClick={() => openPopup(user.id, "Followers")}>
+                    <span onClick={() => openPopup(user.id, "Following")}>
                       <ViewIcon />
                     </span>
                   </React.Fragment>
@@ -80,6 +92,7 @@ const UserList: React.FC = () => {
         isOpen={selectedUserId !== null}
         activeTab={activeTab}
         onClose={closePopup}
+        handleRemoveFollowing={handleRemoveFollowing}
         handleRemoveFollower={handleRemoveFollower}
         handleRemoveInterest={handleRemoveInterest}
         users={users}

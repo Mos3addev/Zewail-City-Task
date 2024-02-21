@@ -9,6 +9,7 @@ interface PopupProps {
   activeTab: string;
   onClose: () => void;
   handleRemoveFollower: (userId: number, followerId: number) => void;
+  handleRemoveFollowing: (userId: number, followerId: number) => void;
   handleRemoveInterest: (userId: number, interestId: number) => void;
   users: User[];
 }
@@ -19,6 +20,7 @@ const Popup: React.FC<PopupProps> = ({
   activeTab,
   onClose,
   handleRemoveFollower,
+  handleRemoveFollowing,
   handleRemoveInterest,
   users,
 }) => {
@@ -52,16 +54,33 @@ const Popup: React.FC<PopupProps> = ({
           <h4>{user.name}</h4>
           <div onClick={onClose}>X</div>
         </div>
-        <div id="justify-tab-example" className="mb-3">
+        <div className="mb-3">
+          {activeTab === "Following" && (
+            <React.Fragment>
+              <h4 className="text-center">Following</h4>
+              <div className="tab">
+                {user.following.map((followerId: number) => (
+                  <Follow
+                    key={followerId}
+                    users={users}
+                    followerId={followerId}
+                    handleRemoveFollow={handleRemoveFollowing}
+                    userId={userId}
+                  />
+                ))}
+              </div>
+            </React.Fragment>
+          )}
           {activeTab === "Followers" && (
             <React.Fragment>
               <h4 className="text-center">Followers</h4>
               <div className="tab">
-                {user.following.map((followerId: number) => (
+                {user.follower?.map((followerId: number) => (
                   <Follow
+                    key={followerId}
                     users={users}
                     followerId={followerId}
-                    handleRemoveFollower={handleRemoveFollower}
+                    handleRemoveFollow={handleRemoveFollower}
                     userId={userId}
                   />
                 ))}
@@ -69,18 +88,19 @@ const Popup: React.FC<PopupProps> = ({
             </React.Fragment>
           )}
           {activeTab === "Interests" && (
-            <div className="tab">
-              <React.Fragment>
-                <h4 className="text-center">Interests</h4>
+            <React.Fragment>
+              <h4 className="text-center">Interests</h4>
+              <div className="tab">
                 {user.interests?.map((interestId: number) => (
                   <Interest
+                    key={interestId}
                     interestId={interestId}
                     handleRemoveInterest={handleRemoveInterest}
                     userId={userId}
                   />
                 ))}
-              </React.Fragment>
-            </div>
+              </div>
+            </React.Fragment>
           )}
         </div>
       </div>
